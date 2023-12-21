@@ -1,13 +1,14 @@
-<script setup>
-import VarComppnent from './components/VarComppnent.vue';
-
-
-</script>
-
 <template>
-  <VarComppnent/>
+  <div class="container">
+    <spacer-md></spacer-md>
+    <ul class="list-group">
+      <li class="list-group-item">An item</li>
+      <li class="list-group-item">A second item</li>
+      <li class="list-group-item">A third item</li>
+      <li class="list-group-item">A fourth item</li>
+      <li class="list-group-item">And a fifth one</li>
+    </ul>
+  </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
