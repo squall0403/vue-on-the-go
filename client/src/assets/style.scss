@@ -1,17 +1,38 @@
-html{
- body{
-  #app{
-   spacer-sm{
+html {
+ body {
+  #app {
+   spacer-sm {
     display: block;
     height: 20px;
    }
-   spacer-md{
+
+   spacer-md {
     display: block;
     height: 40px;
    }
-   spacer-lg{
+
+   spacer-lg {
     display: block;
     height: 60px;
+   }
+
+   #fab {
+    position: fixed;
+    right: 15px;
+    bottom: 15px;
+    border-radius: 50px;
+    width: 60px;
+    height: 60px;
+    padding: 0px;
+    margin: 0px;
+    box-shadow: 3px 3px 10px 3px #dddddd;
+
+    .fab {
+     width: 60px;
+     height: 60px;
+     line-height: 60px;
+     font-size: 40px;
+    }
    }
   }
  }
