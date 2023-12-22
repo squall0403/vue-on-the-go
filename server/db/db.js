@@ -14,7 +14,7 @@ let db = new sqlite3.Database(db_source, (err) => {
  }
 });
 
-// COURSE
+// expense
 const get_all = async (sql) => {
  return new Promise((resolve, reject) => {
   db.serialize(() => {
@@ -67,4 +67,18 @@ const new_expense = async (sql, params) => {
   })
  })
 }
-module.exports = { get_all, get_single, delete_single, new_expense }
+
+//update
+const update_expense = async (sql, params) => {
+ return new Promise((resolve, reject) => {
+  db.serialize(() => {
+   db.all(sql, params, (err, rows) => {
+    if (err) {
+     reject(err)
+    }
+    resolve(rows)
+   })
+  })
+ })
+}
+module.exports = { get_all, get_single, delete_single, new_expense, update_expense }
