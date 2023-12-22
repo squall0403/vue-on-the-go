@@ -16,7 +16,8 @@ const formatAmount = (value) => {
 }
 const deleteExpense = function (id) {
   axios.delete(`${APIURL}/expense/delete/${id}`).then(response => {
-    this.emit('expenseDeleted')
+    // this.emit('expenseDeleted')
+    location.reload()
   })
     .catch(e => {
       console.log(e);

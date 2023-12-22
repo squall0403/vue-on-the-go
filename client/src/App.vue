@@ -16,9 +16,9 @@ const data = reactive({
   dailyTotal: 0,
   loaderShow: true
 })
-const handleExpenseDelete = async function () {
+/* const handleExpenseDelete = async function () {
   location.reload()
-}
+} */
 const curdate = computed(() => {
   let today = new Date
   return today.toLocaleString("vn-vi").split(',')[0]
@@ -61,7 +61,8 @@ watch(
     <h6><strong>Today:</strong> {{ curdate }} - <span class="total-amount">{{ totalAMount }}</span></h6>
   </div>
   <hr>
-  <ListView v-if="!data.loaderShow" :data="dailyExpense" @expenseDeleted="handleExpenseDelete()" />
+  <!-- <ListView v-if="!data.loaderShow" :data="dailyExpense" @expenseDeleted="handleExpenseDelete()" /> -->
+  <ListView v-if="!data.loaderShow" :data="dailyExpense"  />
   <NewExpense v-show="data.newForm"></NewExpense>
   <div class="bottom-bar-container">
     <div>
