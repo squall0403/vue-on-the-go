@@ -19,7 +19,7 @@ const deleteExpense = function (id) {
     this.emit('expenseDeleted')
   })
     .catch(e => {
-      this.errors.push(e)
+      console.log(e);
     })
 }
 

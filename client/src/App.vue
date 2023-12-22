@@ -33,7 +33,7 @@ const getExpense = function () {
 
   })
     .catch(e => {
-      this.errors.push(e)
+      console.log(e);
     })
 }
 onMounted(() => {
