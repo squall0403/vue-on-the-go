@@ -5,6 +5,7 @@ import ListView from './components/ListView.vue'
 import NewExpense from './components/NewExpense.vue'
 import Loader from './components/shared/Loader.vue'
 
+const APIURL = import.meta.env.VITE_APIURL
 const totalAMount = ref(0)
 const dailyExpense = ref([])
 const sum = ref(0)
@@ -24,7 +25,7 @@ const curdate = computed(() => {
 })
 
 const getExpense = function () {
-  axios.get(`http://localhost:8080/expense`).then(response => {
+  axios.get(`${APIURL}/expense`).then(response => {
     data.expense = response.data
     setTimeout(() => {
       data.loaderShow = false

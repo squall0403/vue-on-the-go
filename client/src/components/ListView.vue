@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import axios from 'axios';
 import UpdateExpense from './UpdateExpense.vue';
 
+const APIURL = import.meta.env.VITE_APIURL
 const updateData = ref({})
 const showEdit = ref(false)
 const showDelete = ref(false)
@@ -14,7 +15,7 @@ const formatAmount = (value) => {
   return value.toLocaleString('vn-vi')
 }
 const deleteExpense = function (id) {
-  axios.delete(`http://localhost:8080/expense/delete/${id}`).then(response => {
+  axios.delete(`${APIURL}/expense/delete/${id}`).then(response => {
     this.emit('expenseDeleted')
   })
     .catch(e => {
