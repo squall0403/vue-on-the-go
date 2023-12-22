@@ -2,6 +2,7 @@
 import { reactive } from 'vue'
 import axios from 'axios';
 
+const APIURL = import.meta.env.VITE_APIURL
 const data = reactive({
  expense: '',
  amount: 0,
@@ -30,7 +31,7 @@ const submitRecord = function () {
     amount: data.amount,
     note: data.note
    }
-   axios.post(`http://localhost:8080/expense`, postData).then(function (response) {
+   axios.post(`${APIURL}/expense`, postData).then(function (response) {
     data.errorShow = true;
     data.errorMessage = 'New expense is created'
    }).catch(function (error) {

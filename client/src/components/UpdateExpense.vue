@@ -1,7 +1,8 @@
 <script setup>
-import { reactive,onMounted } from 'vue'
+import { reactive } from 'vue'
 import axios from 'axios';
 
+const APIURL = import.meta.env.VITE_APIURL
 const props = defineProps(['updateData'])
 
 const data = reactive({
@@ -23,7 +24,7 @@ const submitRecord = function () {
         amount: props.updateData.amount,
         note: props.updateData.note
       }
-      axios.patch(`http://localhost:8080/expense/edit/${props.updateData.expense_id}`, postData).then(function (response) {
+      axios.patch(`${APIURL}/expense/edit/${props.updateData.expense_id}`, postData).then(function (response) {
         data.errorShow = true;
         data.errorMessage = 'Expense is update'
       }).catch(function (error) {
