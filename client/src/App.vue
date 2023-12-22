@@ -8,6 +8,7 @@ import Loader from './components/shared/Loader.vue'
 const totalAMount = ref(0)
 const dailyExpense = ref([])
 const sum = ref(0)
+const classDaily = ref(false)
 const data = reactive({
   expense: {},
   newForm: false,
@@ -35,6 +36,7 @@ const getExpense = function () {
     })
 }
 onMounted(() => {
+  classDaily.value = true
   getExpense()
 })
 
@@ -58,16 +60,55 @@ watch(
     <h6><strong>Today:</strong> {{ curdate }} - <span class="total-amount">{{ totalAMount }}</span></h6>
   </div>
   <hr>
-  <ListView v-if="!data.loaderShow" :data="dailyExpense" :curdate="curdate" @expenseDeleted="handleExpenseDelete()" />
+  <ListView v-if="!data.loaderShow" :data="dailyExpense" @expenseDeleted="handleExpenseDelete()" />
   <NewExpense v-show="data.newForm"></NewExpense>
-  <button id="fab" @click="(data.newForm = !data.newForm)">
-    <span class="material-symbols-outlined fab">
-      add
-    </span>
-  </button>
+  <div class="bottom-bar-container">
+    <div>
+      <span :class="(['material-symbols-outlined', (classDaily) && ('active')])">
+        calendar_today
+      </span>
+      <span class="material-symbols-rounded" @click="(data.newForm = !data.newForm)">
+        add_circle
+      </span>
+      <span class="material-symbols-outlined">
+        receipt_long
+      </span>
+    </div>
+
+  </div>
 </template>
 
 <style scoped>
+.bottom-bar-container {
+  padding: 10px 10px 0px 10px;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  background-color: #fff;
+}
+
+.bottom-bar-container div {
+  padding: 20px;
+  border-radius: 20px 20px 25% 25% / 20px 20px 0% 0%;
+  -webkit-box-shadow: 1px 1px 10px 1px #dddddd;
+  -moz-box-shadow: 1px 1px 10px 1px #dddddd;
+  box-shadow: 1px 1px 10px 1px #dddddd;
+  display: flex;
+  justify-content: space-around;
+}
+
+.bottom-bar-container>div>span {
+  font-size: 35px;
+}
+
+.material-symbols-outlined.active {
+  color: #9b4dca;
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+}
 h6 {
   margin: 0px;
 }

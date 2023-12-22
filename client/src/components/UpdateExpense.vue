@@ -23,9 +23,9 @@ const submitRecord = function () {
         amount: props.updateData.amount,
         note: props.updateData.note
       }
-      axios.patch(`http://localhost:8080/expense`, postData).then(function (response) {
-        // data.errorShow = true;
-        // data.errorMessage = 'Expense is update'
+      axios.patch(`http://localhost:8080/expense/edit/${props.updateData.expense_id}`, postData).then(function (response) {
+        data.errorShow = true;
+        data.errorMessage = 'Expense is update'
       }).catch(function (error) {
         console.log(error);
       });

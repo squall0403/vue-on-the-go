@@ -31,8 +31,8 @@ const submitRecord = function () {
     note: data.note
    }
    axios.post(`http://localhost:8080/expense`, postData).then(function (response) {
-    // data.errorShow = true;
-    // data.errorMessage = 'New expense is created'
+    data.errorShow = true;
+    data.errorMessage = 'New expense is created'
    }).catch(function (error) {
     console.log(error);
    });
