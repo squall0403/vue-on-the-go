@@ -29,7 +29,7 @@ const curdate = computed(() => {
 
 const getExpense = function () {
   axios.get(`${APIURL}/expense`).then(response => {
-    data.expense = response.data
+    data.expense = response.data.data
     setTimeout(() => {
       data.loaderShow = false
     }, 500);
@@ -56,38 +56,6 @@ watch(
     totalAMount.value = sum.value.toLocaleString('vn-vi')
   }
 )
-
-const syncDB = async () => {
-  await axios.get(`https://be-vue-onthego.onrender.com/expense`).then(async function (response) {
-    response.data.forEach(d => {
-      setTimeout(() => {
-        axios.get(`http://localhost:8080/expense/view/${d.expense_id}`).then(async function (res) {
-          if (res.data == '') {
-            console.log('Sync data');
-            var postData = {
-              expense: d.expense,
-              amount: d.amount,
-              note: d.note
-            }
-            console.log(postData);
-            axios.post(`http://localhost:8080/expense`, postData).then(function (response) {
-              console.log(response);
-            }).catch(function (error) {
-              console.log(error);
-            });
-          }
-        }).catch(function (err) {
-          console.log(err);
-        })
-      }, 1000);
-
-    });
-  })
-}
-if (APIURL.indexOf('localhost') > 0) {
-  console.log('Start to sync');
-  syncDB()
-}
 </script>
 <template>
   <Loader v-show="data.loaderShow" />
