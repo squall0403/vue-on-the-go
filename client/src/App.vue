@@ -48,6 +48,7 @@ watch(
   () => data.expense,
   (expense) => {
     for (let i = 0; i < expense.length; i++) {
+      console.log(`curDate: ${curdate.value}, expense date: ${expense[i].date}`);
       if (expense[i].date == curdate.value) {
         dailyExpense.value.push(expense[i])
         sum.value += expense[i].amount;
