@@ -4,21 +4,22 @@ import axios from 'axios';
 import ListView from './components/ListView.vue'
 import NewExpense from './components/NewExpense.vue'
 import Loader from './components/shared/Loader.vue'
+import Passcode from './components/shared/Passcode.vue';
 
 const APIURL = import.meta.env.VITE_APIURL
 const totalAMount = ref(0)
 const dailyExpense = ref([])
 const sum = ref(0)
 const classDaily = ref(false)
+const codeFrame = ref(true);
+
 const data = reactive({
   expense: {},
   newForm: false,
   dailyTotal: 0,
   loaderShow: true
 })
-/* const handleExpenseDelete = async function () {
-  location.reload()
-} */
+
 const curdate = computed(() => {
   let today = new Date
   let date = today.getDate()
@@ -39,7 +40,15 @@ const getExpense = function () {
       console.log(e);
     })
 }
+
+const handleCode = () => {
+  localStorage.setItem('codeFrame', false)
+  codeFrame.value = false
+}
 onMounted(() => {
+  if (localStorage.getItem('codeFrame') == 'false') {
+    codeFrame.value = false
+  }
   classDaily.value = true
   getExpense()
 })
@@ -59,6 +68,7 @@ watch(
 </script>
 <template>
   <Loader v-show="data.loaderShow" />
+  <Passcode @passcodeEntered="handleCode()" v-if="codeFrame"></Passcode>
   <div class="container top-header">
     <spacer-sm></spacer-sm>
     <h6><strong>Today:</strong> {{ curdate }} - <span class="total-amount">{{ totalAMount }}</span></h6>
