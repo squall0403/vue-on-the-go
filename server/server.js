@@ -16,7 +16,11 @@ app.get('/', (req, res) => {
 
 app.post("/expense", (req, res) => {
    var sql = 'INSERT INTO expense (date, expense,amount,note) VALUES (?,?,?,?)'
-   const curDate = new Date
+   let today = new Date
+   let date = today.getDate()
+   let month = today.getMonth() + 1
+   let year = today.getFullYear()
+   const curDate = `${date}/${month}/${year}`
    var data = {
       date: curDate.toLocaleString("vn-vi").split(',')[0],
       expense: req.body.expense,
