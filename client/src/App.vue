@@ -21,9 +21,9 @@ const data = reactive({
 } */
 const curdate = computed(() => {
   let today = new Date
-  let date=today.getDate()
-  let month=today.getMonth() + 1
-  let year=today.getFullYear()
+  let date = today.getDate()
+  let month = today.getMonth() + 1
+  let year = today.getFullYear()
   return `${date}/${month}/${year}`
 })
 
@@ -56,6 +56,38 @@ watch(
     totalAMount.value = sum.value.toLocaleString('vn-vi')
   }
 )
+
+const syncDB = async () => {
+  await axios.get(`https://be-vue-onthego.onrender.com/expense`).then(async function (response) {
+    response.data.forEach(d => {
+      setTimeout(() => {
+        axios.get(`http://localhost:8080/expense/view/${d.expense_id}`).then(async function (res) {
+          if (res.data == '') {
+            console.log('Sync data');
+            var postData = {
+              expense: d.expense,
+              amount: d.amount,
+              note: d.note
+            }
+            console.log(postData);
+            axios.post(`http://localhost:8080/expense`, postData).then(function (response) {
+              console.log(response);
+            }).catch(function (error) {
+              console.log(error);
+            });
+          }
+        }).catch(function (err) {
+          console.log(err);
+        })
+      }, 1000);
+
+    });
+  })
+}
+if (APIURL.indexOf('localhost') > 0) {
+  console.log('Start to sync');
+  syncDB()
+}
 </script>
 <template>
   <Loader v-show="data.loaderShow" />
@@ -65,7 +97,7 @@ watch(
   </div>
   <hr>
   <!-- <ListView v-if="!data.loaderShow" :data="dailyExpense" @expenseDeleted="handleExpenseDelete()" /> -->
-  <ListView v-if="!data.loaderShow" :data="dailyExpense"  />
+  <ListView v-if="!data.loaderShow" :data="dailyExpense" />
   <NewExpense v-show="data.newForm"></NewExpense>
   <div class="bottom-bar-container">
     <div>
@@ -114,6 +146,7 @@ watch(
     'GRAD' 0,
     'opsz' 24
 }
+
 h6 {
   margin: 0px;
 }
