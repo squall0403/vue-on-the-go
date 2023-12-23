@@ -21,7 +21,10 @@ const data = reactive({
 } */
 const curdate = computed(() => {
   let today = new Date
-  return today.toLocaleString("vn-vi").split(',')[0]
+  let date=today.getDate()
+  let month=today.getMonth() + 1
+  let year=today.getFullYear()
+  return `${date}/${month}/${year}`
 })
 
 const getExpense = function () {
