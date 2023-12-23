@@ -28,8 +28,5 @@ coverage
 *.sw?
 
 *.tsbuildinfo
-<<<<<<< HEAD
+
 server/db/expense.sqlite3
-=======
-*.sqlite3
->>>>>>> 3235b42d03400eb2608b2c9847b7a4052040977a
