@@ -21,15 +21,15 @@ const data = reactive({
 } */
 const curdate = computed(() => {
   let today = new Date
-  let date=today.getDate()
-  let month=today.getMonth() + 1
-  let year=today.getFullYear()
+  let date = today.getDate()
+  let month = today.getMonth() + 1
+  let year = today.getFullYear()
   return `${date}/${month}/${year}`
 })
 
 const getExpense = function () {
   axios.get(`${APIURL}/expense`).then(response => {
-    data.expense = response.data
+    data.expense = response.data.data
     setTimeout(() => {
       data.loaderShow = false
     }, 500);
@@ -65,7 +65,7 @@ watch(
   </div>
   <hr>
   <!-- <ListView v-if="!data.loaderShow" :data="dailyExpense" @expenseDeleted="handleExpenseDelete()" /> -->
-  <ListView v-if="!data.loaderShow" :data="dailyExpense"  />
+  <ListView v-if="!data.loaderShow" :data="dailyExpense" />
   <NewExpense v-show="data.newForm"></NewExpense>
   <div class="bottom-bar-container">
     <div>
@@ -114,6 +114,7 @@ watch(
     'GRAD' 0,
     'opsz' 24
 }
+
 h6 {
   margin: 0px;
 }
