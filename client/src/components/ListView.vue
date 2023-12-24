@@ -30,6 +30,7 @@ const updateExpense = function (e) {
 }
 </script>
 <template>
+  <hr>
   <div class="container">
     <ul v-for="item in data" id="expense-list">
       <li>
