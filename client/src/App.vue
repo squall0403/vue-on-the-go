@@ -5,17 +5,17 @@ import ListView from './components/ListView.vue'
 import NewExpense from './components/NewExpense.vue'
 import Loader from './components/shared/Loader.vue'
 import Passcode from './components/shared/Passcode.vue';
+import HistoryView from './components/HistoryView.vue';
 
 const APIURL = import.meta.env.VITE_APIURL
 const totalAMount = ref(0)
 const dailyExpense = ref([])
 const sum = ref(0)
-const classDaily = ref(false)
+const navState = ref('daily')
 const codeFrame = ref(true);
 
 const data = reactive({
   expense: {},
-  newForm: false,
   dailyTotal: 0,
   loaderShow: true
 })
@@ -49,7 +49,6 @@ onMounted(() => {
   if (localStorage.getItem('codeFrame') == 'false') {
     codeFrame.value = false
   }
-  classDaily.value = true
   getExpense()
 })
 
@@ -69,23 +68,23 @@ watch(
 <template>
   <Loader v-show="data.loaderShow" />
   <Passcode @passcodeEntered="handleCode()" v-if="codeFrame"></Passcode>
-  <div class="container top-header">
+  <div class="container top-header" v-if="navState == 'daily'">
     <spacer-sm></spacer-sm>
     <h6><strong>Today:</strong> {{ curdate }} - <span class="total-amount">{{ totalAMount }}</span></h6>
   </div>
-  <hr>
-  <!-- <ListView v-if="!data.loaderShow" :data="dailyExpense" @expenseDeleted="handleExpenseDelete()" /> -->
-  <ListView v-if="!data.loaderShow" :data="dailyExpense" />
-  <NewExpense v-show="data.newForm"></NewExpense>
+  <ListView v-if="!data.loaderShow && navState == 'daily'" :data="dailyExpense" />
+  <NewExpense v-if="navState == 'new'"></NewExpense>
+  <HistoryView v-if="navState == 'history'" />
   <div class="bottom-bar-container">
     <div>
-      <span :class="(['material-symbols-outlined', (classDaily) && ('active')])">
+      <span :class="(['material-symbols-outlined', (navState == 'daily') && ('active')])" @click="navState = 'daily'">
         calendar_today
       </span>
-      <span class="material-symbols-rounded" @click="(data.newForm = !data.newForm)">
+      <span :class="(['material-symbols-rounded', (navState == 'new') && ('active')])"
+        @click="navState = 'new'">
         add_circle
       </span>
-      <span class="material-symbols-outlined">
+      <span :class="(['material-symbols-outlined', (navState == 'history') && ('active')])" @click="navState = 'history'">
         receipt_long
       </span>
     </div>
@@ -116,6 +115,7 @@ watch(
   font-size: 35px;
 }
 
+.material-symbols-rounded.active,
 .material-symbols-outlined.active {
   color: #9b4dca;
   font-variation-settings:
