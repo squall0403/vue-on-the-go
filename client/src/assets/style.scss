@@ -1,3 +1,6 @@
+$prim-color: #192655;
+$prim-color-10:#1926551a;
+
 html {
  body {
   #app {
@@ -36,17 +39,34 @@ html {
      font-size: 40px;
     }
    }
-   input.button-primary{
+
+   input.button-primary {
     background-color: #192655;
     border-color: #192655;
    }
-   .button.button-outline{
+
+   .button.button-outline {
     border-color: #192655;
     color: #192655;
    }
-   @media screen and (max-width: 990px){
+  }
 
+  #ui-datepicker-div {
+   .ui-datepicker-calendar{
+    display: inline-table;
+   }
+   .ui-widget-header {
+    background: $prim-color;
+    color: #fff;
+
+    .ui-icon {
+     filter: brightness(100);
+    }
+   }
+   .ui-state-default, .ui-widget-content .ui-state-default{
+    background: $prim-color-10;
    }
   }
+
  }
 }
