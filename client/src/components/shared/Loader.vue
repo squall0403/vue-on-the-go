@@ -1,13 +1,6 @@
 <template>
    <div id="loaded-container">
-      <div class="spinner">
-         <div></div>
-         <div></div>
-         <div></div>
-         <div></div>
-         <div></div>
-         <div></div>
-      </div>
+      <div class="pulse"></div>
    </div>
 </template>
 
@@ -25,60 +18,31 @@
    align-items: center;
 }
 
-.spinner {
-   width: 44.8px;
-   height: 44.8px;
-   animation: spinner-y0fdc1 2s infinite ease;
-   transform-style: preserve-3d;
+.pulse {
+   width: 56px;
+   height: 24.6px;
+   position: relative;
 }
 
-.spinner>div {
-   background-color: rgba(0, 182, 255, 0.2);
-   height: 100%;
+.pulse:before,
+.pulse:after {
+   content: "";
    position: absolute;
-   width: 100%;
-   border: 2.2px solid #00b6ff;
+   inset: 0;
+   background: #474bff;
+   box-shadow: 0 0 0 28px #474bff;
+   clip-path: polygon(-28px -11.2px,10% -6.7px,20% 0,calc(50% - 9px) 0,calc(50% - 5.6px) -11.2px,calc(50% - 4.5px) -9px,calc(50% + 4.5px) -9px,calc(50% + 5.6px) -11.2px,calc(50% + 9px) 0,80% 0,90% -6.7px,calc(100% + 28px) -11.2px,100% 80%,calc(100% + 5.6px) calc(100% + 5.6px),60% 100%,50% calc(100% + 9px),40% 100%,-5.6px calc(100% + 5.6px),0 80%);
 }
 
-.spinner div:nth-of-type(1) {
-   transform: translateZ(-22.4px) rotateY(180deg);
+.pulse:after {
+   animation: pulse-ciavg0md 1s infinite;
+   transform: perspective(168px) translateZ(0px);
 }
 
-.spinner div:nth-of-type(2) {
-   transform: rotateY(-270deg) translateX(50%);
-   transform-origin: top right;
-}
-
-.spinner div:nth-of-type(3) {
-   transform: rotateY(270deg) translateX(-50%);
-   transform-origin: center left;
-}
-
-.spinner div:nth-of-type(4) {
-   transform: rotateX(90deg) translateY(-50%);
-   transform-origin: top center;
-}
-
-.spinner div:nth-of-type(5) {
-   transform: rotateX(-90deg) translateY(50%);
-   transform-origin: bottom center;
-}
-
-.spinner div:nth-of-type(6) {
-   transform: translateZ(22.4px);
-}
-
-@keyframes spinner-y0fdc1 {
-   0% {
-      transform: rotate(45deg) rotateX(-25deg) rotateY(25deg);
-   }
-
-   50% {
-      transform: rotate(45deg) rotateX(-385deg) rotateY(25deg);
-   }
-
-   100% {
-      transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
+@keyframes pulse-ciavg0md {
+   to {
+      transform: perspective(168px) translateZ(56px);
+      opacity: 0;
    }
 }
 </style>

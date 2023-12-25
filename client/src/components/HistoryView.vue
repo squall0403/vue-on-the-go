@@ -19,11 +19,9 @@ const getExpense = function () {
     data.expense = computed(() => {
       return [...response.data.data].reverse('date')
     })
-
     setTimeout(() => {
       data.loaderShow = false
     }, 500);
-
   })
     .catch(e => {
       console.log(e);
@@ -39,7 +37,16 @@ onMounted(() => {
       e = data.expense.filter((t) => t.date == data.dateFilter) : e = data.expense
     return e
   })
+  $("#dateField").datepicker(
+    {
+      dateFormat: "dd/mm/yy"
+    }
+  );
+  $("#dateField").on('change', function () {
+    data.dateFilter = $(this).val()
+  })
 })
+
 
 </script>
 <template>
@@ -49,8 +56,9 @@ onMounted(() => {
     <h2>History</h2>
     <hr>
     <label for="dateField">Date</label>
-    <div class="filter-container"><input type="text" id="dateField" v-model="data.dateFilter"><span
-        class="material-symbols-rounded" @click="data.dateFilter = ''">
+    <div class="filter-container">
+      <input type="text" id="dateField" v-model="data.dateFilter"><span class="material-symbols-rounded"
+        @click="data.dateFilter = ''">
         cancel
       </span>
     </div>
@@ -97,4 +105,6 @@ onMounted(() => {
   color: rgb(255, 0, 149);
   /* float: right; */
 }
+
+
 </style>
