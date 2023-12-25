@@ -95,7 +95,7 @@ watch(
 <style scoped>
 .bottom-bar-container {
   padding: 10px 10px 0px 10px;
-  position: sticky;
+  position: fixed;
   bottom: 0px;
   width: 100%;
   background-color: #fff;
