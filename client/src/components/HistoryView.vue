@@ -8,7 +8,10 @@ const data = reactive({
   expense: {},
   loaderShow: true,
   dateFilter: '',
-  filteredExpenses: []
+  filteredExpenses: [],
+  monthlyAmount: 0,
+  dailyAmount: 0,
+  curMonth: ''
 })
 const formatAmount = (value) => {
   return value.toLocaleString('vn-vi')
@@ -28,7 +31,6 @@ const getExpense = function () {
     })
 }
 
-
 onMounted(() => {
   getExpense()
   data.filteredExpenses = computed(() => {
@@ -37,17 +39,37 @@ onMounted(() => {
       e = data.expense.filter((t) => t.date == data.dateFilter) : e = data.expense
     return e
   })
+  data.dailyAmount = computed(() => {
+    let s = 0
+    for (const e of data.filteredExpenses) {
+      s = s + e.amount
+    }
+    return formatAmount(s)
+  });
+  data.monthlyAmount = computed(() => {
+    let s = 0
+    if (data.dateFilter != '') {
+      data.curMonth = data.dateFilter.split('/')[1]
+    } else {
+      data.curMonth = new Date
+      data.curMonth = data.curMonth.getMonth() + 1
+    }
+    for (const e of data.expense) {
+      if (e.date.split('/')[1] == data.curMonth) {
+        s = s + e.amount
+      }
+    }
+    return formatAmount(s)
+  });
   $("#dateField").datepicker(
     {
-      dateFormat: "dd/mm/yy"
+      dateFormat: "dd/mm/yy",
     }
   );
   $("#dateField").on('change', function () {
     data.dateFilter = $(this).val()
   })
 })
-
-
 </script>
 <template>
   <spacer-sm />
@@ -63,6 +85,9 @@ onMounted(() => {
       </span>
     </div>
     <hr>
+    <strong>Month:</strong> {{ data.curMonth }} # {{ data.monthlyAmount }}<br>
+    <strong>Day:</strong> {{ data.dailyAmount }}
+    <hr>
     <ul v-for="item in data.filteredExpenses" id="expense-list">
       <li>
         <span class="date">{{ item.date }}</span> #
@@ -72,7 +97,7 @@ onMounted(() => {
     </ul>
   </div>
 </template>
-<style scoped>
+<style>
 .filter-container {
   display: flex;
   align-items: center;
@@ -106,5 +131,10 @@ onMounted(() => {
   /* float: right; */
 }
 
-
-</style>
+.ui-state-highlight,
+.ui-widget-content .ui-state-highlight,
+.ui-widget-header .ui-state-highlight {
+  border-color: rgb(255, 0, 149);
+  background-color: rgb(255, 0, 149) !important;
+  color: #fff;
+}</style>
