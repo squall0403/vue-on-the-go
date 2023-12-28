@@ -35,13 +35,13 @@ app.post("/expense", async (req, res) => {
       maxId = n.data().expense_id + 1
    })
    let today = new Date
-   let date = today.getDate()
-   let month = today.getMonth() + 1
-   let year = today.getFullYear()
-   const curDate = `${date}/${month}/${year}`
+   // let date = today.getDate()
+   // let month = today.getMonth() + 1
+   // let year = today.getFullYear()
+   // const curDate = `${date}/${month}/${year}`
    var data = {
       expense_id: maxId,
-      date: curDate,
+      date: today,
       expense: req.body.expense,
       amount: req.body.amount,
       note: req.body.note,
@@ -76,9 +76,10 @@ app.get("/expense/view/:id", async (req, res, next) => {
       return;
    }
    const results = doc.data()
-   console.log(results);
+   const date = new Date(results.date._seconds*1000)
+   results.date = date
    res.json(
-      results.data
+      results
    )
 });
 

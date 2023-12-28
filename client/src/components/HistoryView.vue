@@ -4,14 +4,13 @@ import axios from 'axios';
 import Loader from './shared/Loader.vue'
 const APIURL = import.meta.env.VITE_APIURL
 
+const props = defineProps(['expenseDate'])
 const data = reactive({
   expense: {},
   loaderShow: true,
   dateFilter: '',
   filteredExpenses: [],
-  monthlyAmount: 0,
-  dailyAmount: 0,
-  curMonth: ''
+  monthlyExpense: 0
 })
 const formatAmount = (value) => {
   return value.toLocaleString('vn-vi')
@@ -23,6 +22,12 @@ const getExpense = function () {
       return [...response.data.data].reverse('date')
     })
     setTimeout(() => {
+      let curMonth = new Date
+      data.expense.forEach(e => {
+        if (new Date(e.date._seconds * 1000).getMonth() == curMonth.getMonth()) {
+          data.monthlyExpense = data.monthlyExpense + e.amount
+        }
+      });
       data.loaderShow = false
     }, 500);
   })
@@ -36,7 +41,7 @@ onMounted(() => {
   data.filteredExpenses = computed(() => {
     let e = []
     data.dateFilter != '' ?
-      e = data.expense.filter((t) => t.date == data.dateFilter) : e = data.expense
+      e = data.expense.filter((t) => props.expenseDate(t.date) == data.dateFilter) : e = data.expense
     return e
   })
   data.dailyAmount = computed(() => {
@@ -85,12 +90,9 @@ onMounted(() => {
       </span>
     </div>
     <hr>
-    <strong>Month:</strong> {{ data.curMonth }} # {{ data.monthlyAmount }}<br>
-    <strong>Day:</strong> {{ data.dailyAmount }}
-    <hr>
     <ul v-for="item in data.filteredExpenses" id="expense-list">
       <li>
-        <span class="date">{{ item.date }}</span> #
+        <span class="date">{{ props.expenseDate(item.date) }}</span> #
         <span class="expense">{{ item.expense }}</span> #
         <span class="amount">{{ formatAmount(item.amount) }}</span>
       </li>
@@ -126,15 +128,10 @@ onMounted(() => {
   font-weight: 600;
 }
 
-#expense-list .amount {
+.amount {
   color: rgb(255, 0, 149);
   /* float: right; */
 }
 
-.ui-state-highlight,
-.ui-widget-content .ui-state-highlight,
-.ui-widget-header .ui-state-highlight {
-  border-color: rgb(255, 0, 149);
-  background-color: rgb(255, 0, 149) !important;
-  color: #fff;
-}</style>
+
+</style>
