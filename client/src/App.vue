@@ -45,6 +45,12 @@ const handleCode = () => {
   localStorage.setItem('codeFrame', false)
   codeFrame.value = false
 }
+
+const expenseDate = (e) => {
+  e = new Date(e._seconds * 1000)
+  e = e.getDate() + '/' + (e.getMonth() + 1) + '/' + e.getFullYear()
+  return e
+}
 onMounted(() => {
   if (localStorage.getItem('codeFrame') == 'false') {
     codeFrame.value = false
@@ -56,7 +62,7 @@ watch(
   () => data.expense,
   (expense) => {
     for (let i = 0; i < expense.length; i++) {
-      if (expense[i].date == curdate.value) {
+      if (expenseDate(expense[i].date) == curdate.value) {
         dailyExpense.value.push(expense[i])
         sum.value += expense[i].amount;
       }
@@ -72,16 +78,15 @@ watch(
     <spacer-sm></spacer-sm>
     <h6><strong>Today:</strong> {{ curdate }} - <span class="total-amount">{{ totalAMount }}</span></h6>
   </div>
-  <ListView v-if="!data.loaderShow && navState == 'daily'" :data="dailyExpense" />
+  <ListView v-if="!data.loaderShow && navState == 'daily'" :data="dailyExpense"/>
   <NewExpense v-if="navState == 'new'"></NewExpense>
-  <HistoryView v-if="navState == 'history'" />
+  <HistoryView v-if="navState == 'history'" :expenseDate="expenseDate" />
   <div class="bottom-bar-container">
     <div>
       <span :class="(['material-symbols-outlined', (navState == 'daily') && ('active')])" @click="navState = 'daily'">
         calendar_today
       </span>
-      <span :class="(['material-symbols-rounded', (navState == 'new') && ('active')])"
-        @click="navState = 'new'">
+      <span :class="(['material-symbols-rounded', (navState == 'new') && ('active')])" @click="navState = 'new'">
         add_circle
       </span>
       <span :class="(['material-symbols-outlined', (navState == 'history') && ('active')])" @click="navState = 'history'">
