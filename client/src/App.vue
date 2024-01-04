@@ -48,7 +48,11 @@ const handleCode = () => {
 
 const expenseDate = (e) => {
   e = new Date(e._seconds * 1000)
-  e = e.getDate() + '/' + (e.getMonth() + 1) + '/' + e.getFullYear()
+  let d = e.getDate().toString()
+  let m = (e.getMonth() + 1).toString()
+  d.length == 1 ? d = '0' + d : d
+  m.length == 1 ? m = '0' + m : m
+  e = d + '/' + m + '/' + e.getFullYear()
   return e
 }
 onMounted(() => {
@@ -78,7 +82,7 @@ watch(
     <spacer-sm></spacer-sm>
     <h6><strong>Today:</strong> {{ curdate }} - <span class="total-amount">{{ totalAMount }}</span></h6>
   </div>
-  <ListView v-if="!data.loaderShow && navState == 'daily'" :data="dailyExpense"/>
+  <ListView v-if="!data.loaderShow && navState == 'daily'" :data="dailyExpense" />
   <NewExpense v-if="navState == 'new'"></NewExpense>
   <HistoryView v-if="navState == 'history'" :expenseDate="expenseDate" />
   <div class="bottom-bar-container">
