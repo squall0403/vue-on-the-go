@@ -8,7 +8,7 @@ const updateData = ref({})
 const showEdit = ref(false)
 const showDelete = ref(false)
 const idToDelete = ref(0)
-const props = defineProps(['data'])
+const props = defineProps(['data','expenseDate'])
 
 const emit = defineEmits(['expenseDeleted'])
 const formatAmount = (value) => {
@@ -16,7 +16,6 @@ const formatAmount = (value) => {
 }
 const deleteExpense = function (id) {
   axios.delete(`${APIURL}/expense/delete/${id}`).then(response => {
-    // this.emit('expenseDeleted')
     location.reload()
   })
     .catch(e => {
