@@ -42,6 +42,7 @@ onMounted(() => {
     let e = []
     data.dateFilter != '' ?
       e = data.expense.filter((t) => props.expenseDate(t.date) == data.dateFilter) : e = data.expense
+
     return e
   })
   $("#dateField").datepicker(
@@ -71,8 +72,8 @@ onMounted(() => {
     </div>
     <p>This month: <span class="amount">{{ formatAmount(data.monthlyExpense) }}</span></p>
     <hr>
-    <ul v-for="item in data.filteredExpenses" id="expense-list">
-      <li>
+    <ul  id="expense-list">
+      <li v-for="item in data.filteredExpenses">
         <span class="date">{{ props.expenseDate(item.date) }}</span> #
         <span class="expense">{{ item.expense }}</span> #
         <span class="amount">{{ formatAmount(item.amount) }}</span>
