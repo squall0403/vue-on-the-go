@@ -22,10 +22,14 @@ const data = reactive({
 
 const curdate = computed(() => {
   let today = new Date
-  let date = today.getDate()
-  let month = today.getMonth() + 1
+  let d = today.getDate().toString()
+  let m = (today.getMonth() + 1).toString()
   let year = today.getFullYear()
-  return `${date}/${month}/${year}`
+
+  d.length == 1 ? d = '0' + d : d
+  m.length == 1 ? m = '0' + m : m
+
+  return `${d}/${m}/${year}`
 })
 
 const getExpense = function () {
