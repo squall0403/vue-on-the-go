@@ -1,38 +1,33 @@
 <script setup>
 import { onMounted, reactive, computed, watch } from 'vue'
-import axios from 'axios';
 import Loader from './shared/Loader.vue'
-const APIURL = import.meta.env.VITE_APIURL
 
-const props = defineProps(['expenseDate'])
+const props = defineProps(['expenseDate', 'expense'])
 const data = reactive({
   expense: {},
   loaderShow: true,
   dateFilter: '',
-  filteredExpenses: []
+  filteredExpenses: [],
+  monthlyExpense:0
 })
 const formatAmount = (value) => {
   return value.toLocaleString('vn-vi')
 }
 
 const getExpense = function () {
-  axios.get(`${APIURL}/expense`).then(response => {
-    data.expense = computed(() => {
-      return [...response.data.data].reverse('date')
-    })
-    setTimeout(() => {
-      let curMonth = new Date
-      data.expense.forEach(e => {
-        if (new Date(e.date._seconds * 1000).getMonth() == curMonth.getMonth()) {
-          data.monthlyExpense = data.monthlyExpense + e.amount
-        }
-      });
-      data.loaderShow = false
-    }, 500);
+  data.expense = computed(() => {
+    return [...props.expense].reverse('date')
   })
-    .catch(e => {
-      console.log(e);
-    })
+  setTimeout(() => {
+    /* let curMonth = new Date
+    data.expense.forEach(e => {
+      if (new Date(e.date.seconds * 1000).getMonth() == curMonth.getMonth()) {
+        data.monthlyExpense += e.amount
+      }
+    }); */
+    data.loaderShow = false
+  }, 500);
+
 }
 
 onMounted(() => {
@@ -41,7 +36,6 @@ onMounted(() => {
     let e = []
     data.dateFilter != '' ?
       e = data.expense.filter((t) => props.expenseDate(t.date) == data.dateFilter) : e = data.expense
-
     return e
   })
   data.dailyAmount = computed(() => {
@@ -60,7 +54,7 @@ onMounted(() => {
       data.curMonth = data.curMonth.getMonth() + 1
     }
     for (const e of data.expense) {
-      if (e.date.split('/')[1] == data.curMonth) {
+      if (props.expenseDate(e.date).split('/')[1] == data.curMonth) {
         s = s + e.amount
       }
     }
@@ -89,8 +83,9 @@ onMounted(() => {
         cancel
       </span>
     </div>
+    <strong>This month:</strong> {{ data.monthlyAmount }}
     <hr>
-    <ul  id="expense-list">
+    <ul id="expense-list">
       <li v-for="item in data.filteredExpenses">
         <span class="date">{{ props.expenseDate(item.date) }}</span> #
         <span class="expense">{{ item.expense }}</span> #
@@ -139,4 +134,5 @@ onMounted(() => {
   border-color: rgb(255, 0, 149);
   background-color: rgb(255, 0, 149) !important;
   color: #fff;
-}</style>
+}
+</style>

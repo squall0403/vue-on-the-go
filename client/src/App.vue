@@ -1,13 +1,14 @@
 <script setup>
 import { onMounted, reactive, computed, watch, ref } from 'vue';
-import axios from 'axios';
 import ListView from './components/ListView.vue'
 import NewExpense from './components/NewExpense.vue'
 import Loader from './components/shared/Loader.vue'
 import Passcode from './components/shared/Passcode.vue';
 import HistoryView from './components/HistoryView.vue';
+import { useFirestore } from 'vuefire'
+import { collection, getDocs } from 'firebase/firestore'
+const db = useFirestore()
 
-const APIURL = import.meta.env.VITE_APIURL
 const totalAMount = ref(0)
 const dailyExpense = ref([])
 const sum = ref(0)
@@ -32,17 +33,19 @@ const curdate = computed(() => {
   return `${d}/${m}/${year}`
 })
 
-const getExpense = function () {
-  axios.get(`${APIURL}/expense`).then(response => {
-    data.expense = response.data.data
-    setTimeout(() => {
-      data.loaderShow = false
-    }, 500);
+const getExpense = async function () {
+  const doc = await getDocs(collection(db, "expense"));
+  if (doc.empty) {
+    console.log('No matching documents.');
+    return;
+  }
+  let e = []
+  doc.forEach(doc => {
+    e.push(doc.data())
+  });
 
-  })
-    .catch(e => {
-      console.log(e);
-    })
+  data.expense = e
+  data.loaderShow = false
 }
 
 const handleCode = () => {
@@ -51,7 +54,7 @@ const handleCode = () => {
 }
 
 const expenseDate = (e) => {
-  e = new Date(e._seconds * 1000)
+  e = new Date(e.seconds * 1000)
   let d = e.getDate().toString()
   let m = (e.getMonth() + 1).toString()
   d.length == 1 ? d = '0' + d : d
@@ -88,7 +91,7 @@ watch(
   </div>
   <ListView v-if="!data.loaderShow && navState == 'daily'" :data="dailyExpense" />
   <NewExpense v-if="navState == 'new'"></NewExpense>
-  <HistoryView v-if="navState == 'history'" :expenseDate="expenseDate" />
+  <HistoryView v-if="navState == 'history'" :expenseDate="expenseDate" :expense="data.expense"/>
   <div class="bottom-bar-container">
     <div>
       <span :class="(['material-symbols-outlined', (navState == 'daily') && ('active')])" @click="navState = 'daily'">
