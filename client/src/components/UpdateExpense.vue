@@ -65,7 +65,7 @@ const updateRecord = async function () {
           <div class="float-right">
             <button
               class="button button-outline"
-              @click="this.unmount()">
+              @click="unmount()">
               Close
             </button>
           </div>
