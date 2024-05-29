@@ -1,59 +1,85 @@
 <script setup>
-import { reactive } from 'vue'
-import axios from 'axios';
+import { reactive } from "vue";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase.js";
 
-const APIURL = import.meta.env.VITE_APIURL
-const props = defineProps(['updateData'])
-
+const props = defineProps(["updateData"]);
+const expense_id = props.updateData.expense_id;
 const data = reactive({
   errorShow: false,
-  errorMessage: '',
-})
-
-const submitRecord = function () {
-  if (props.updateData.expense == '') {
+  errorMessage: "",
+});
+const expense = doc(db, "expense", expense_id.toString());
+const updateRecord = async function () {
+  if (props.updateData.expense == "") {
     data.errorShow = true;
-    data.errorMessage = 'Expense is required'
+    data.errorMessage = "Expense is required";
   } else {
     if (props.updateData.amount == 0) {
       data.errorShow = true;
-      data.errorMessage = 'Amount is required'
+      data.errorMessage = "Amount is required";
     } else {
       var postData = {
+        expense_id: expense_id,
         expense: props.updateData.expense,
         amount: props.updateData.amount,
-        note: props.updateData.note
-      }
-      axios.patch(`${APIURL}/expense/edit/${props.updateData.expense_id}`, postData).then(function (response) {
+        note: props.updateData.note,
+        date: props.updateData.date,
+      };
+      try {
+        await updateDoc(expense, postData);
         data.errorShow = true;
-        data.errorMessage = 'Expense is update'
-      }).catch(function (error) {
+        data.errorMessage = "Expense is updated";
+      } catch (error) {
         console.log(error);
-      });
+      }
     }
   }
-}
-
+};
 </script>
 <template>
   <Transition>
-    <div class="container" id="newExpense">
+    <div
+      class="container"
+      id="newExpense">
       <h2>Update expense record</h2>
       <form>
         <fieldset>
           <label for="expenseField">Expense</label>
-          <input type="text" placeholder="Expense" id="expenseField" v-model="props.updateData.expense">
+          <input
+            type="text"
+            placeholder="Expense"
+            id="expenseField"
+            v-model="props.updateData.expense" />
           <label for="amountField">Amount</label>
-          <input type="number" placeholder="Amount" id="amountField" v-model="props.updateData.amount">
+          <input
+            type="number"
+            placeholder="Amount"
+            id="amountField"
+            v-model="props.updateData.amount" />
           <label for="noteField">Note</label>
-          <textarea placeholder="Note" id="noteField" v-model="props.updateData.note"></textarea>
+          <textarea
+            placeholder="Note"
+            id="noteField"
+            v-model="props.updateData.note"></textarea>
           <div class="float-right">
-            <button class="button button-outline" @click="this.unmount();">Close</button>
+            <button
+              class="button button-outline"
+              @click="this.unmount()">
+              Close
+            </button>
           </div>
-          <input class="button-primary" type="button" value="Update" @click="submitRecord()">
+          <input
+            class="button-primary"
+            type="button"
+            value="Update"
+            @click="updateRecord()" />
         </fieldset>
       </form>
-      <div id="errorMessage" v-show="data.errorShow" @click="data.errorShow = !data.errorShow">
+      <div
+        id="errorMessage"
+        v-show="data.errorShow"
+        @click="data.errorShow = !data.errorShow">
         <div class="message_container">
           <p>{{ data.errorMessage }}</p>
         </div>
@@ -62,7 +88,7 @@ const submitRecord = function () {
   </Transition>
 </template>
 
-<style>
+<style scoped lang="scss">
 .v-enter-active,
 .v-leave-active {
   transition: opacity 0.3s ease;

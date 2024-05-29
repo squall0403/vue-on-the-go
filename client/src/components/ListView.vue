@@ -1,64 +1,84 @@
 <script setup>
-import { ref } from 'vue';
-import axios from 'axios';
-import UpdateExpense from './UpdateExpense.vue';
+import { ref } from "vue";
+import UpdateExpense from "./UpdateExpense.vue";
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "../firebase.js";
 
-const APIURL = import.meta.env.VITE_APIURL
-const updateData = ref({})
-const showEdit = ref(false)
-const showDelete = ref(false)
-const idToDelete = ref(0)
-const props = defineProps(['data','expenseDate'])
+const updateData = ref({});
+const showEdit = ref(false);
+const showDelete = ref(false);
+const idToDelete = ref(0);
+const props = defineProps(["data", "expenseDate"]);
 
-const emit = defineEmits(['expenseDeleted'])
+const emit = defineEmits(["expenseDeleted"]);
 const formatAmount = (value) => {
-  return value.toLocaleString('vn-vi')
-}
-const deleteExpense = function (id) {
-  axios.delete(`${APIURL}/expense/delete/${id}`).then(response => {
-    location.reload()
-  })
-    .catch(e => {
-      console.log(e);
-    })
-}
+  return value.toLocaleString("vn-vi");
+};
+const deleteExpense = async function (id) {
+  try {
+    await deleteDoc(doc(db, "expense", id.toString()));
+    showDelete.value = false;
+    alert("Expense is deleted");
+    window.location.reload()
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const updateExpense = function (e) {
-  showEdit.value = true
-  updateData.value = e
-}
+  showEdit.value = true;
+  updateData.value = e;
+};
 </script>
 <template>
-  <hr>
+  <hr />
   <div class="container">
-    <ul v-for="item in data" id="expense-list">
+    <ul
+      v-for="item in data"
+      id="expense-list">
       <li>
-        <span class="expense">{{ item.expense }}</span> #
-        <span class="amount">{{ formatAmount(item.amount) }}</span> #
+        <span class="expense">{{ item.expense }}</span> # <span class="amount">{{ formatAmount(item.amount) }}</span> #
         <span class="actions">
-          <button class="button" @click="updateExpense(item)"><span class="material-symbols-outlined">
-              edit
-            </span></button>
-          <button class="button"
-            @click="idToDelete = item.expense_id; data.errorMessage = `Do you want to delete ${item.expense}`; showDelete = true"><span
-              class="material-symbols-outlined">
-              do_not_disturb_on
-            </span></button>
-
+          <button
+            class="button"
+            @click="updateExpense(item)">
+            <span class="material-symbols-outlined"> edit </span>
+          </button>
+          <button
+            class="button"
+            @click="
+              idToDelete = item.expense_id;
+              data.errorMessage = `Do you want to delete ${item.expense}`;
+              showDelete = true;
+            ">
+            <span class="material-symbols-outlined"> do_not_disturb_on </span>
+          </button>
         </span>
       </li>
     </ul>
-    <div id="confirm-box" v-show="showDelete">
+    <div
+      id="confirm-box"
+      v-show="showDelete">
       <div class="message_container">
         <p>{{ data.errorMessage }}</p>
         <div class="button-container">
-          <button class="button" @click="deleteExpense(idToDelete)">Delete</button>
-          <button class="button button-outline" @click="showDelete = false">Close</button>
+          <button
+            class="button"
+            @click="deleteExpense(idToDelete)">
+            Delete
+          </button>
+          <button
+            class="button button-outline"
+            @click="showDelete = false">
+            Close
+          </button>
         </div>
       </div>
     </div>
   </div>
-  <UpdateExpense :updateData="updateData" v-if="showEdit" />
+  <UpdateExpense
+    :updateData="updateData"
+    v-if="showEdit" />
 </template>
 
 <style scoped>
